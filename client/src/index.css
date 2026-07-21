@@ -1,0 +1,100 @@
+@import "tailwindcss";
+
+@theme {
+  --color-navy-50: #eef1fb;
+  --color-navy-100: #d6ddf5;
+  --color-navy-200: #adbaeb;
+  --color-navy-300: #7e91da;
+  --color-navy-400: #4f68c2;
+  --color-navy-500: #2e469f;
+  --color-navy-600: #1f317c;
+  --color-navy-700: #16235d;
+  --color-navy-800: #0e1740;
+  --color-navy-900: #090f2b;
+  --color-navy-950: #050a1c;
+
+  --color-gold-50: #fdf6e8;
+  --color-gold-100: #fbebc4;
+  --color-gold-200: #f7d68a;
+  --color-gold-300: #f4c15c;
+  --color-gold-400: #f4a623;
+  --color-gold-500: #e08e10;
+  --color-gold-600: #b8710c;
+  --color-gold-700: #8f570b;
+
+  --font-display: "Poppins", "Segoe UI", system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-display);
+  background-color: #f7f8fc;
+  color: #16235d;
+}
+
+/* Board-matched gradient: deep orange -> gold, same as the "SP" lettering on the shop board */
+.text-gradient-gold {
+  background-image: linear-gradient(90deg, #ff7a1a 0%, #ffb020 45%, #ffd76a 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.bg-starfield {
+  background-image:
+    radial-gradient(1.5px 1.5px at 20% 30%, rgba(255, 255, 255, 0.55) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 65% 15%, rgba(255, 255, 255, 0.4) 50%, transparent 51%),
+    radial-gradient(1px 1px at 80% 60%, rgba(255, 255, 255, 0.5) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 40% 75%, rgba(255, 255, 255, 0.35) 50%, transparent 51%),
+    radial-gradient(1px 1px at 90% 85%, rgba(255, 255, 255, 0.45) 50%, transparent 51%),
+    radial-gradient(1px 1px at 10% 90%, rgba(255, 255, 255, 0.4) 50%, transparent 51%);
+  background-repeat: repeat;
+  background-size: 220px 220px;
+  animation: twinkle 5s ease-in-out infinite alternate;
+}
+
+@keyframes twinkle {
+  from { opacity: 0.6; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.45s ease-out both;
+}
+
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(244, 166, 35, 0.55); }
+  50% { box-shadow: 0 0 0 10px rgba(244, 166, 35, 0); }
+}
+
+.animate-glow-pulse {
+  animation: glowPulse 2.2s ease-out infinite;
+}
+
+@keyframes floatY {
+  0%, 100% { transform: translateY(0) rotate(var(--tilt, 0deg)); }
+  50% { transform: translateY(-14px) rotate(var(--tilt, 0deg)); }
+}
+
+.animate-float {
+  animation: floatY 4s ease-in-out infinite;
+  transform: rotate(var(--tilt, 0deg));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bg-starfield,
+  .animate-fade-in-up,
+  .animate-glow-pulse,
+  .animate-float {
+    animation: none !important;
+  }
+}
