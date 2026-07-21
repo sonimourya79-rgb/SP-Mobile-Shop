@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { resolveImage } from '../api/config';
 import toast from 'react-hot-toast';
 
 export default function PhoneCard({ phone }) {
@@ -20,7 +21,7 @@ export default function PhoneCard({ phone }) {
       <div className="aspect-square bg-navy-50 flex items-center justify-center overflow-hidden">
         {phone.images?.[0] ? (
           <img
-            src={phone.images[0]}
+            src={resolveImage(phone.images[0])}
             alt={`${phone.brand} ${phone.model}`}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform"
           />

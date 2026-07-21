@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { resolveImage } from '../api/config';
 import toast from 'react-hot-toast';
 
 export default function ProductCard({ product }) {
@@ -19,7 +20,7 @@ export default function ProductCard({ product }) {
       <div className="aspect-square bg-navy-50 flex items-center justify-center overflow-hidden">
         {product.images?.[0] ? (
           <img
-            src={product.images[0]}
+            src={resolveImage(product.images[0])}
             alt={product.name}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform"
           />

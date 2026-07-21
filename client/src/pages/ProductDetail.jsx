@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import api from '../api/axios';
+import { resolveImage } from '../api/config';
 import { useCart } from '../context/CartContext';
 import Loading from '../components/Loading';
 
@@ -41,7 +42,7 @@ export default function ProductDetail() {
       <div>
         <div className="aspect-square bg-navy-50 rounded-xl overflow-hidden flex items-center justify-center mb-3">
           {product.images?.length ? (
-            <img src={product.images[activeImg]} alt={product.name} className="w-full h-full object-cover" />
+            <img src={resolveImage(product.images[activeImg])} alt={product.name} className="w-full h-full object-cover" />
           ) : (
             <span className="text-navy-300">No image</span>
           )}
@@ -56,7 +57,7 @@ export default function ProductDetail() {
                   idx === activeImg ? 'border-gold-400' : 'border-transparent'
                 }`}
               >
-                <img src={img} alt="" className="h-full w-full object-cover" />
+                <img src={resolveImage(img)} alt="" className="h-full w-full object-cover" />
               </button>
             ))}
           </div>

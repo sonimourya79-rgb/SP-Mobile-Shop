@@ -19,7 +19,14 @@ const saleRoutes = require('./routes/saleRoutes');
 
 const app = express();
 
-app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:5173' }));
+// CLIENT_URL may be a single origin or a comma-separated list (e.g. production
+// domain + Vercel preview URLs): "https://sp-mobile.vercel.app,https://sp-mobile-git-main-you.vercel.app"
+const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:5183')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+app.use(cors({ origin: allowedOrigins }));
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 

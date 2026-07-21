@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { resolveImage } from '../api/config';
 
 export default function Cart() {
   const { items, updateQty, removeItem, totalAmount } = useCart();
@@ -37,7 +38,7 @@ export default function Cart() {
           <div key={item.itemId} className="flex items-center gap-4 p-4">
             <div className="h-16 w-16 bg-navy-50 rounded-md overflow-hidden flex items-center justify-center shrink-0">
               {item.image ? (
-                <img src={item.image} alt={item.name} className="h-full w-full object-cover" />
+                <img src={resolveImage(item.image)} alt={item.name} className="h-full w-full object-cover" />
               ) : (
                 <span className="text-xs text-navy-300">No image</span>
               )}

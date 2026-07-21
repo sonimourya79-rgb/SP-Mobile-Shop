@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import api from '../api/axios';
+import { resolveImage } from '../api/config';
 import Loading from '../components/Loading';
 
 const CATEGORIES = [
@@ -200,7 +201,7 @@ export default function ProductCatalogTab() {
                 <div className="flex gap-2 flex-wrap">
                   {editing.images.map((img) => (
                     <div key={img} className="relative h-16 w-16">
-                      <img src={img} alt="" className="h-full w-full object-cover rounded-md" />
+                      <img src={resolveImage(img)} alt="" className="h-full w-full object-cover rounded-md" />
                       <button type="button" onClick={() => removeImage(editing, img)}
                         className="absolute -top-1.5 -right-1.5 bg-red-500 text-white rounded-full h-5 w-5 text-xs">×</button>
                     </div>
