@@ -72,11 +72,10 @@ the two deployed URLs together).
 
 1. Go to https://vercel.com and sign up with Google (sonimourya79@gmail.com).
 2. **Add New** → **Project** → import the `SP-Mobile-Shop` repo.
-3. Configure:
-   - **Root Directory**: `client`
-   - **Framework Preset**: Vite (should auto-detect)
-   - **Build Command**: `npm run build` (default)
-   - **Output Directory**: `dist` (default)
+3. Leave the build settings as-is — don't set a Root Directory. The repo has a root-level
+   `vercel.json` that tells Vercel to build the `client` folder and serve `client/dist`, so it
+   works regardless of what the dashboard UI shows (Vercel's settings page layout has changed
+   versions over time, so this avoids relying on finding a specific field).
 4. **Environment Variables** — add:
    | Key | Value |
    |---|---|
