@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js",
+    "build": "echo No build step needed for this plain Node server",
     "seed": "node seed/seedAdmin.js"
   },
   "dependencies": {
