@@ -370,9 +370,10 @@ async function seedContactMessages() {
   console.log(`Seeded ${sampleContactMessages.length} contact messages`);
 }
 
-async function run() {
-  await connectDB();
-
+// Runs the actual seeding using whatever mongoose connection is already open.
+// Used both by the CLI entrypoint below and by the one-off HTTP seed route
+// (server/routes/devRoutes.js), which reuses the live server's connection.
+async function runSeed() {
   const adminEmail = (process.env.ADMIN_EMAIL || 'aa6871678@gmail.com').toLowerCase();
   const existingAdmin = await User.findOne({ email: adminEmail });
   if (existingAdmin) {
@@ -396,11 +397,19 @@ async function run() {
   await seedOrder(customer);
   await seedContactMessages();
 
-  await mongoose.disconnect();
   console.log('Seeding complete');
 }
 
-run().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+module.exports = { runSeed };
+
+// CLI entrypoint: `node seed/seedAdmin.js` / `npm run seed` — manages its own
+// connection since nothing else is running in that context.
+if (require.main === module) {
+  connectDB()
+    .then(runSeed)
+    .then(() => mongoose.disconnect())
+    .catch((err) => {
+      console.error(err);
+      process.exit(1);
+    });
+}
