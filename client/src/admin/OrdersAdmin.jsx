@@ -94,7 +94,7 @@ export default function OrdersAdmin() {
                 </div>
               </div>
               <button onClick={() => save(o._id)}
-                className="mt-3 bg-navy-800 text-white font-semibold px-4 py-2 rounded-md hover:bg-navy-700 text-sm">
+                className="mt-3 w-full sm:w-auto bg-navy-800 text-white font-semibold px-4 py-2 rounded-md hover:bg-navy-700 text-sm">
                 Save
               </button>
               {drafts[o._id]?.status === 'confirmed' && o.status !== 'confirmed' && o.status !== 'ready' && o.status !== 'completed' && (

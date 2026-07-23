@@ -15,12 +15,12 @@ export default function ProductsAdmin() {
   return (
     <div>
       <h1 className="text-2xl font-bold text-navy-900 mb-4">Accessories</h1>
-      <div className="flex gap-2 border-b border-navy-100 mb-6">
+      <div className="flex gap-2 border-b border-navy-100 mb-6 overflow-x-auto scrollbar-none">
         {TABS.map((t) => (
           <button
             key={t.key}
             onClick={() => setTab(t.key)}
-            className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors ${
+            className={`shrink-0 px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors ${
               tab === t.key ? 'border-gold-400 text-navy-900' : 'border-transparent text-navy-400 hover:text-navy-700'
             }`}
           >
