@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 
 const links = [
   { to: '/admin', label: 'Dashboard', end: true },
+  { to: '/admin/customers', label: 'Customers' },
   { to: '/admin/products', label: 'Accessories' },
   { to: '/admin/secondhand', label: 'Secondhand Phones' },
   { to: '/admin/repairs', label: 'Repair Requests' },

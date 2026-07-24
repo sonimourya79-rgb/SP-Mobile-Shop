@@ -60,7 +60,7 @@ export default function Home() {
               </li>
               <li className="flex gap-2">
                 <span className="text-gold-400">Email:</span>
-                <a href="mailto:aa6871678@gmail.com" className="hover:text-gold-400 transition-colors">aa6871678@gmail.com</a>
+                <a href="mailto:spmobiletechnology@gmail.com" className="hover:text-gold-400 transition-colors">spmobiletechnology@gmail.com</a>
               </li>
               <li className="flex gap-2">
                 <span className="text-gold-400">Address:</span>

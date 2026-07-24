@@ -27,6 +27,7 @@ import Profile from './pages/account/Profile';
 
 import AdminLayout from './admin/AdminLayout';
 import Dashboard from './admin/Dashboard';
+import CustomersAdmin from './admin/CustomersAdmin';
 import ProductsAdmin from './admin/ProductsAdmin';
 import SecondhandAdmin from './admin/SecondhandAdmin';
 import RepairsAdmin from './admin/RepairsAdmin';
@@ -109,6 +110,7 @@ export default function App() {
               }
             >
               <Route index element={<Dashboard />} />
+              <Route path="customers" element={<CustomersAdmin />} />
               <Route path="products" element={<ProductsAdmin />} />
               <Route path="secondhand" element={<SecondhandAdmin />} />
               <Route path="repairs" element={<RepairsAdmin />} />

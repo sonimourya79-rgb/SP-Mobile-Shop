@@ -17,6 +17,7 @@ const offerRoutes = require('./routes/offerRoutes');
 const purchaseRoutes = require('./routes/purchaseRoutes');
 const saleRoutes = require('./routes/saleRoutes');
 const devRoutes = require('./routes/devRoutes');
+const customerRoutes = require('./routes/customerRoutes');
 
 const app = express();
 
@@ -44,6 +45,7 @@ app.use('/api/offers', offerRoutes);
 app.use('/api/purchases', purchaseRoutes);
 app.use('/api/sales', saleRoutes);
 app.use('/api/dev', devRoutes);
+app.use('/api/customers', customerRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

@@ -41,7 +41,10 @@ Log in with the admin account — you're redirected straight to `/admin`.
 1. **Dashboard** (`/admin`) — at-a-glance counts: new repair requests, repairs in progress, pending
    sell requests, pending orders, low-stock accessories, total accessories, available secondhand
    phones, total orders. Each card links to the relevant screen.
-2. **Accessories** (`/admin/products`) — three tabs:
+2. **Customers** (`/admin/customers`) — see every registered customer (name, email, phone, join
+   date). Add a customer account manually, edit their details, reset their password, or delete an
+   account.
+3. **Accessories** (`/admin/products`) — three tabs:
    - **Catalog** — add/edit/delete accessories: name, description, category, price, stock, active
      toggle, and up to 6 images per item (drag in files, remove individual images with the × on the
      thumbnail). Categories cover every accessory type: Tempered Glass, Back Cover, Charger, Charging

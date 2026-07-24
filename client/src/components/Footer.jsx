@@ -29,7 +29,7 @@ export default function Footer() {
           <h4 className="font-semibold text-white mb-2">Contact Us</h4>
           <ul className="space-y-1 text-sm text-navy-300">
             <li>Mo.: <a href="tel:9653206528" className="hover:text-gold-400">9653206528</a></li>
-            <li>Email: <a href="mailto:aa6871678@gmail.com" className="hover:text-gold-400">aa6871678@gmail.com</a></li>
+            <li>Email: <a href="mailto:spmobiletechnology@gmail.com" className="hover:text-gold-400">spmobiletechnology@gmail.com</a></li>
             <li>Appapada, Malad East, Auto Stand Near 624 Bus Stop</li>
           </ul>
         </div>
