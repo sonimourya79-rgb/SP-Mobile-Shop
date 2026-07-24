@@ -95,7 +95,8 @@ export default function PurchaseTab() {
 
       <div>
         <h2 className="text-lg font-semibold text-navy-800 mb-3">Recent Purchases</h2>
-        <div className="bg-white border border-navy-100 rounded-xl overflow-hidden shadow-sm">
+        {/* Desktop table */}
+        <div className="hidden md:block bg-white border border-navy-100 rounded-xl overflow-hidden shadow-sm">
           <table className="w-full text-sm">
             <thead className="bg-navy-50 text-navy-500 text-left">
               <tr>
@@ -121,6 +122,35 @@ export default function PurchaseTab() {
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile card layout */}
+        <div className="md:hidden space-y-3">
+          {purchases.map((p) => (
+            <div key={p._id} className="bg-white border border-navy-100 rounded-xl p-4 shadow-sm">
+              <div className="flex items-center justify-between mb-2">
+                <p className="font-semibold text-navy-900 truncate">{p.product?.name || '—'}</p>
+                <span className="text-xs text-navy-400">{new Date(p.createdAt).toLocaleDateString()}</span>
+              </div>
+              <div className="grid grid-cols-3 gap-2 text-sm">
+                <div>
+                  <span className="text-navy-400 text-xs">Qty</span>
+                  <p className="font-medium text-navy-700">{p.quantity}</p>
+                </div>
+                <div>
+                  <span className="text-navy-400 text-xs">Cost</span>
+                  <p className="font-medium text-navy-700">₹{p.costPrice}</p>
+                </div>
+                <div>
+                  <span className="text-navy-400 text-xs">Supplier</span>
+                  <p className="font-medium text-navy-700 truncate">{p.supplier || '—'}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+          {purchases.length === 0 && (
+            <p className="text-navy-400 text-center py-8">No purchase entries yet.</p>
+          )}
         </div>
       </div>
     </div>

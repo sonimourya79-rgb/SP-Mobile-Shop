@@ -118,39 +118,85 @@ export default function ProductCatalogTab() {
 
       {loading ? (
         <Loading />
+      ) : products.length === 0 ? (
+        <p className="text-navy-400 text-center py-16">No accessories yet.</p>
       ) : (
-        <div className="bg-white rounded-xl border border-navy-100 overflow-hidden shadow-sm">
-          <table className="w-full text-sm">
-            <thead className="bg-navy-50 text-navy-500 text-left">
-              <tr>
-                <th className="p-3">Name</th>
-                <th className="p-3">Category</th>
-                <th className="p-3">Price</th>
-                <th className="p-3">Stock</th>
-                <th className="p-3">Active</th>
-                <th className="p-3 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-navy-50">
-              {products.map((p) => (
-                <tr key={p._id}>
-                  <td className="p-3 font-medium text-navy-900">{p.name}</td>
-                  <td className="p-3 text-navy-500">{p.category}</td>
-                  <td className="p-3 text-navy-700">₹{p.price}</td>
-                  <td className={`p-3 ${p.stock <= 5 ? 'text-red-500 font-semibold' : 'text-navy-700'}`}>{p.stock}</td>
-                  <td className="p-3">{p.isActive ? 'Yes' : 'No'}</td>
-                  <td className="p-3 text-right space-x-2">
-                    <button onClick={() => openEdit(p)} className="text-navy-700 hover:text-navy-900 font-medium">Edit</button>
-                    <button onClick={() => handleDelete(p)} className="text-red-500 hover:text-red-600 font-medium">Delete</button>
-                  </td>
+        <>
+          {/* Desktop table */}
+          <div className="hidden md:block bg-white rounded-xl border border-navy-100 overflow-hidden shadow-sm">
+            <table className="w-full text-sm">
+              <thead className="bg-navy-50 text-navy-500 text-left">
+                <tr>
+                  <th className="p-3">Image</th>
+                  <th className="p-3">Name</th>
+                  <th className="p-3">Category</th>
+                  <th className="p-3">Price</th>
+                  <th className="p-3">Stock</th>
+                  <th className="p-3">Active</th>
+                  <th className="p-3 text-right">Actions</th>
                 </tr>
-              ))}
-              {products.length === 0 && (
-                <tr><td colSpan={6} className="p-6 text-center text-navy-400">No accessories yet.</td></tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody className="divide-y divide-navy-50">
+                {products.map((p) => (
+                  <tr key={p._id}>
+                    <td className="p-3">
+                      {p.images?.length > 0 ? (
+                        <img src={resolveImage(p.images[0])} alt="" className="h-10 w-10 object-cover rounded-md" />
+                      ) : (
+                        <span className="text-navy-300 text-xs">—</span>
+                      )}
+                    </td>
+                    <td className="p-3 font-medium text-navy-900">{p.name}</td>
+                    <td className="p-3 text-navy-500">{p.category}</td>
+                    <td className="p-3 text-navy-700">₹{p.price}</td>
+                    <td className={`p-3 ${p.stock <= 5 ? 'text-red-500 font-semibold' : 'text-navy-700'}`}>{p.stock}</td>
+                    <td className="p-3">{p.isActive ? 'Yes' : 'No'}</td>
+                    <td className="p-3 text-right space-x-2">
+                      <button onClick={() => openEdit(p)} className="text-navy-700 hover:text-navy-900 font-medium">Edit</button>
+                      <button onClick={() => handleDelete(p)} className="text-red-500 hover:text-red-600 font-medium">Delete</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Mobile card layout */}
+          <div className="md:hidden space-y-3">
+            {products.map((p) => (
+              <div key={p._id} className="bg-white border border-navy-100 rounded-xl p-4 shadow-sm">
+                <div className="flex gap-3">
+                  {p.images?.length > 0 && (
+                    <img src={resolveImage(p.images[0])} alt="" className="h-16 w-16 object-cover rounded-lg shrink-0" />
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-navy-900 truncate">{p.name}</p>
+                    <p className="text-xs text-navy-500">{p.category}</p>
+                    <div className="flex items-center gap-3 mt-1.5 text-sm">
+                      <span className="font-bold text-navy-800">₹{p.price}</span>
+                      <span className={`${p.stock <= 5 ? 'text-red-500 font-semibold' : 'text-navy-600'}`}>
+                        Stock: {p.stock}
+                      </span>
+                      {p.isActive ? (
+                        <span className="text-xs text-green-600">Active</span>
+                      ) : (
+                        <span className="text-xs text-navy-400">Inactive</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <div className="flex gap-2 mt-3 pt-3 border-t border-navy-50">
+                  <button onClick={() => openEdit(p)} className="flex-1 text-center border border-navy-200 rounded-md py-1.5 text-sm font-medium text-navy-700 hover:bg-navy-50">
+                    Edit
+                  </button>
+                  <button onClick={() => handleDelete(p)} className="flex-1 text-center border border-red-200 rounded-md py-1.5 text-sm font-medium text-red-500 hover:bg-red-50">
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
       )}
 
       {editing && (

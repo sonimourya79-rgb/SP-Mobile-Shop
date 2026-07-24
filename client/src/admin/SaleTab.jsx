@@ -106,7 +106,8 @@ export default function SaleTab() {
 
       <div>
         <h2 className="text-lg font-semibold text-navy-800 mb-3">Recent Sales</h2>
-        <div className="bg-white border border-navy-100 rounded-xl overflow-hidden shadow-sm">
+        {/* Desktop table */}
+        <div className="hidden md:block bg-white border border-navy-100 rounded-xl overflow-hidden shadow-sm">
           <table className="w-full text-sm">
             <thead className="bg-navy-50 text-navy-500 text-left">
               <tr>
@@ -132,6 +133,35 @@ export default function SaleTab() {
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile card layout */}
+        <div className="md:hidden space-y-3">
+          {sales.map((s) => (
+            <div key={s._id} className="bg-white border border-navy-100 rounded-xl p-4 shadow-sm">
+              <div className="flex items-center justify-between mb-2">
+                <p className="font-semibold text-navy-900 truncate">{s.product?.name || '—'}</p>
+                <span className="text-xs text-navy-400">{new Date(s.createdAt).toLocaleDateString()}</span>
+              </div>
+              <div className="grid grid-cols-3 gap-2 text-sm">
+                <div>
+                  <span className="text-navy-400 text-xs">Qty</span>
+                  <p className="font-medium text-navy-700">{s.quantity}</p>
+                </div>
+                <div>
+                  <span className="text-navy-400 text-xs">Price</span>
+                  <p className="font-medium text-navy-700">₹{s.sellingPrice}</p>
+                </div>
+                <div>
+                  <span className="text-navy-400 text-xs">Customer</span>
+                  <p className="font-medium text-navy-700 truncate">{s.customerName || '—'}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+          {sales.length === 0 && (
+            <p className="text-navy-400 text-center py-8">No sale entries yet.</p>
+          )}
         </div>
       </div>
     </div>
