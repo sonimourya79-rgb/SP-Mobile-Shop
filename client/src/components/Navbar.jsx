@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
+import NotificationBell from './NotificationBell';
 
 const links = [
   { to: '/', label: 'Home' },
@@ -45,6 +46,7 @@ export default function Navbar() {
           </nav>
 
           <div className="hidden lg:flex items-center gap-3">
+            {user && <NotificationBell />}
             <Link to="/cart" className="relative text-navy-50 hover:text-gold-400 transition-colors px-2 py-2">
               Cart
               {totalCount > 0 && (
@@ -107,6 +109,9 @@ export default function Navbar() {
           </NavLink>
           {user ? (
             <>
+              <div className="px-1 py-1">
+                <NotificationBell />
+              </div>
               <NavLink
                 to={user.role === 'admin' ? '/admin' : '/account/orders'}
                 className={navLinkClass}

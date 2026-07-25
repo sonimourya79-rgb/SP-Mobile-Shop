@@ -1,6 +1,7 @@
 const Order = require('../models/Order');
 const Product = require('../models/Product');
 const SecondhandPhone = require('../models/SecondhandPhone');
+const { notifyAdmins, notifyUser } = require('../utils/notify');
 
 async function create(req, res) {
   const { items, customerName, phone, address, notes } = req.body;
@@ -23,6 +24,8 @@ async function create(req, res) {
     totalAmount,
   });
 
+  await notifyAdmins(`New order from ${customerName} — ₹${totalAmount}`, '/admin/orders');
+
   res.status(201).json(order);
 }
 
@@ -44,6 +47,8 @@ async function updateStatus(req, res) {
 
   const wasConfirmed = order.status === 'confirmed' || order.status === 'ready' || order.status === 'completed';
   const { status, notes } = req.body;
+  const statusChanged = status !== undefined && status !== order.status;
+  const notesChanged = notes !== undefined && notes !== order.notes;
 
   if (status === 'confirmed' && !wasConfirmed) {
     for (const item of order.items) {
@@ -58,6 +63,12 @@ async function updateStatus(req, res) {
   if (status !== undefined) order.status = status;
   if (notes !== undefined) order.notes = notes;
   await order.save();
+
+  if (statusChanged || notesChanged) {
+    const detail = statusChanged ? `status is now "${order.status}"` : 'has a new note from the shop';
+    await notifyUser(order.user, `Your order (₹${order.totalAmount}) ${detail}`, '/account/orders');
+  }
+
   res.json(order);
 }
 

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { NavLink, Outlet, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import NotificationBell from '../components/NotificationBell';
 
 const links = [
   { to: '/admin', label: 'Dashboard', end: true },
@@ -34,6 +35,11 @@ export default function AdminLayout() {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
         </svg>
       </button>
+
+      {/* Notification bell — always visible, top-right */}
+      <div className="fixed top-3 right-3 z-40 bg-navy-900 rounded-md shadow-lg">
+        <NotificationBell />
+      </div>
 
       {/* Backdrop overlay when sidebar is open on mobile */}
       {sidebarOpen && (
@@ -93,7 +99,7 @@ export default function AdminLayout() {
       </aside>
 
       {/* Main content area */}
-      <main className="flex-1 p-4 lg:p-8 pt-16 lg:pt-8 overflow-x-auto min-w-0">
+      <main className="flex-1 p-4 lg:p-8 pt-16 overflow-x-auto min-w-0">
         <Outlet />
       </main>
     </div>
