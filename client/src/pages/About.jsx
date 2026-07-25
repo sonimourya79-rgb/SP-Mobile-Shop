@@ -9,8 +9,9 @@ export default function About() {
       </p>
       <p className="text-navy-600 leading-relaxed mb-4">
         From tempered glass and covers to chargers, batteries, cables and speakers/mics, we stock
-        everyday essentials for every phone. Our repair desk handles display, battery, charging pin
-        and speaker/mic issues with quick turnaround and fair pricing.
+        everyday essentials for every phone. We also print customised photo covers — bring your
+        favourite photo and we'll put it on a durable case. Our repair desk handles display,
+        battery, charging pin and speaker/mic issues with quick turnaround and fair pricing.
       </p>
       <p className="text-navy-600 leading-relaxed">
         Looking to upgrade? Sell your old phone to us for a fair price, or pick up a quality-checked

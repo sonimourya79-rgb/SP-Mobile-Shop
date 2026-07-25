@@ -13,6 +13,7 @@ const services = [
   { title: 'Charging Pin Repair', desc: 'Fix slow or no-charging issues fast.' },
   { title: 'Speaker / Mic Repair', desc: 'Restore call and media audio quality.' },
   { title: 'Tempered Glass & Covers', desc: 'Protect your phone in style.' },
+  { title: 'Customised Photo Print Covers', desc: 'Get your own photo printed on a durable phone cover.' },
   { title: 'Buy & Sell Old Phones', desc: 'Best price for your used phone, or grab a great deal.' },
 ];
 
