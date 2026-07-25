@@ -17,16 +17,25 @@ export default function SendOfferAdmin() {
     if (!confirm(`Send this email to all ${audience ?? ''} registered customers?`)) return;
     setSending(true);
     try {
-      const res = await api.post('/offers/send', { subject, message });
-      if (!res.data.configured) {
+      const res = await api.post('/offers/send', { subject, message }, { timeout: 90000 });
+      const { configured, sent, failed, failureReason } = res.data;
+      if (!configured) {
         toast.error('Email is not configured on the server (EMAIL_USER/EMAIL_PASS missing) — nothing was sent.');
-      } else {
-        toast.success(`Offer emailed to ${res.data.sent} customer(s)`);
+      } else if (sent > 0 && failed === 0) {
+        toast.success(`Offer emailed to ${sent} customer(s)`);
         setSubject('');
         setMessage('');
+      } else if (sent > 0 && failed > 0) {
+        toast.error(`Sent to ${sent}, but ${failed} failed — ${failureReason || 'check server email settings'}`);
+      } else {
+        toast.error(`Failed to send — ${failureReason || 'check server email settings (EMAIL_HOST/PORT/USER/PASS)'}`);
       }
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to send offer');
+      if (err.code === 'ECONNABORTED') {
+        toast.error('Timed out waiting for the server to send the emails. Check the server logs.');
+      } else {
+        toast.error(err.response?.data?.message || 'Failed to send offer');
+      }
     } finally {
       setSending(false);
     }

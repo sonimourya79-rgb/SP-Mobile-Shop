@@ -1,5 +1,5 @@
 const User = require('../models/User');
-const { sendMail } = require('../utils/email');
+const { sendMail, isConfigured } = require('../utils/email');
 
 const BATCH_SIZE = 40; // stay well under typical SMTP recipient-per-message limits
 
@@ -20,6 +20,10 @@ async function send(req, res) {
     return res.status(400).json({ message: 'Subject and message are required' });
   }
 
+  if (!isConfigured()) {
+    return res.json({ configured: false, totalCustomers: 0, sent: 0, failed: 0 });
+  }
+
   const customers = await User.find({ role: 'customer' }).select('email');
   const emails = customers.map((c) => c.email).filter(Boolean);
   if (emails.length === 0) {
@@ -32,19 +36,31 @@ async function send(req, res) {
       <div style="white-space: pre-line; color:#1f2937;">${message}</div>
       <hr style="margin-top:24px;" />
       <p style="font-size:12px; color:#6b7280;">
-        SP Mobile, Appapada, Malad East, Auto Stand Near 624 Bus Stop &middot; 9653206528 &middot; aa6871678@gmail.com
+        SP Mobile, Appapada, Malad East, Auto Stand Near 624 Bus Stop &middot; 9653206528 &middot; spmobiletechnology@gmail.com
       </p>
     </div>
   `;
 
   const batches = chunk(emails, BATCH_SIZE);
   let sent = 0;
+  let lastFailureReason = null;
   for (const batch of batches) {
     const result = await sendMail({ to: process.env.EMAIL_FROM || process.env.EMAIL_USER, bcc: batch, subject, html });
-    if (result.sent) sent += batch.length;
+    if (result.sent) {
+      sent += batch.length;
+    } else {
+      lastFailureReason = result.reason || 'unknown error';
+    }
   }
+  const failed = emails.length - sent;
 
-  res.json({ totalCustomers: emails.length, sent, configured: sent > 0 || emails.length === 0 });
+  res.json({
+    configured: true,
+    totalCustomers: emails.length,
+    sent,
+    failed,
+    failureReason: failed > 0 ? lastFailureReason : undefined,
+  });
 }
 
 module.exports = { audience, send };
