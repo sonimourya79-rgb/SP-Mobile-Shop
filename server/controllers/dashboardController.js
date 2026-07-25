@@ -5,6 +5,7 @@ const SellRequest = require('../models/SellRequest');
 const Order = require('../models/Order');
 const StockSale = require('../models/StockSale');
 const StockPurchase = require('../models/StockPurchase');
+const PrintCoverRequest = require('../models/PrintCoverRequest');
 
 const LOW_STOCK_THRESHOLD = 5;
 const FULFILLED_ORDER_STATUSES = ['confirmed', 'ready', 'completed'];
@@ -21,6 +22,7 @@ async function stats(req, res) {
     totalProducts,
     availablePhones,
     totalOrders,
+    pendingPrintCovers,
   ] = await Promise.all([
     RepairRequest.countDocuments({ status: 'received' }),
     RepairRequest.countDocuments({ status: { $in: ['diagnosing', 'in-progress'] } }),
@@ -30,6 +32,7 @@ async function stats(req, res) {
     Product.countDocuments({ isActive: true }),
     SecondhandPhone.countDocuments({ isActive: true, status: 'available' }),
     Order.countDocuments(),
+    PrintCoverRequest.countDocuments({ status: { $in: ['received', 'printing'] } }),
   ]);
 
   res.json({
@@ -41,6 +44,7 @@ async function stats(req, res) {
     totalProducts,
     availablePhones,
     totalOrders,
+    pendingPrintCovers,
   });
 }
 

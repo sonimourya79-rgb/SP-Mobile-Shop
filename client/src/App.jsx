@@ -13,6 +13,7 @@ import Secondhand from './pages/Secondhand';
 import SecondhandDetail from './pages/SecondhandDetail';
 import Repair from './pages/Repair';
 import SellPhone from './pages/SellPhone';
+import PrintCover from './pages/PrintCover';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import Contact from './pages/Contact';
@@ -24,6 +25,7 @@ import NotFound from './pages/NotFound';
 import MyOrders from './pages/account/MyOrders';
 import MyRepairs from './pages/account/MyRepairs';
 import MySellRequests from './pages/account/MySellRequests';
+import MyPrintCovers from './pages/account/MyPrintCovers';
 import Profile from './pages/account/Profile';
 
 import AdminLayout from './admin/AdminLayout';
@@ -36,6 +38,7 @@ import SellRequestsAdmin from './admin/SellRequestsAdmin';
 import OrdersAdmin from './admin/OrdersAdmin';
 import ContactMessagesAdmin from './admin/ContactMessagesAdmin';
 import SendOfferAdmin from './admin/SendOfferAdmin';
+import PrintCoversAdmin from './admin/PrintCoversAdmin';
 
 export default function App() {
   return (
@@ -53,6 +56,7 @@ export default function App() {
                 <Route path="/secondhand/:id" element={<SecondhandDetail />} />
                 <Route path="/repair" element={<Repair />} />
                 <Route path="/sell-phone" element={<SellPhone />} />
+                <Route path="/print-cover" element={<PrintCover />} />
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/about" element={<About />} />
@@ -92,6 +96,14 @@ export default function App() {
                   }
                 />
                 <Route
+                  path="/account/print-covers"
+                  element={
+                    <ProtectedRoute>
+                      <MyPrintCovers />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
                   path="/account/profile"
                   element={
                     <ProtectedRoute>
@@ -120,6 +132,7 @@ export default function App() {
                 <Route path="orders" element={<OrdersAdmin />} />
                 <Route path="messages" element={<ContactMessagesAdmin />} />
                 <Route path="send-offer" element={<SendOfferAdmin />} />
+                <Route path="print-covers" element={<PrintCoversAdmin />} />
               </Route>
             </Routes>
           </CartProvider>

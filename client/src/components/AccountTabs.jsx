@@ -4,6 +4,7 @@ const tabs = [
   { to: '/account/orders', label: 'My Orders' },
   { to: '/account/repairs', label: 'My Repairs' },
   { to: '/account/sell-requests', label: 'Sell Requests' },
+  { to: '/account/print-covers', label: 'Print Covers' },
   { to: '/account/profile', label: 'Profile' },
 ];
 

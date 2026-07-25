@@ -8,6 +8,7 @@ const CARDS = [
   { key: 'pendingRepairs', label: 'New Repair Requests', to: '/admin/repairs' },
   { key: 'activeRepairs', label: 'Repairs In Progress', to: '/admin/repairs' },
   { key: 'pendingSellRequests', label: 'Pending Sell Requests', to: '/admin/sell-requests' },
+  { key: 'pendingPrintCovers', label: 'Pending Print Cover Requests', to: '/admin/print-covers' },
   { key: 'pendingOrders', label: 'Pending Orders', to: '/admin/orders' },
   { key: 'lowStockProducts', label: 'Low Stock Accessories', to: '/admin/products' },
   { key: 'totalProducts', label: 'Total Active Accessories', to: '/admin/products' },

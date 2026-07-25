@@ -15,6 +15,8 @@ const STYLES = {
   confirmed: 'bg-gold-100 text-gold-700',
   ready: 'bg-gold-200 text-gold-700',
   cancelled: 'bg-red-100 text-red-700',
+  // print cover statuses
+  printing: 'bg-gold-200 text-gold-700',
 };
 
 export default function StatusBadge({ status }) {

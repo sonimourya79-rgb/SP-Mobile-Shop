@@ -19,6 +19,7 @@ const saleRoutes = require('./routes/saleRoutes');
 const devRoutes = require('./routes/devRoutes');
 const customerRoutes = require('./routes/customerRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
+const printCoverRoutes = require('./routes/printCoverRoutes');
 
 const app = express();
 
@@ -48,6 +49,7 @@ app.use('/api/sales', saleRoutes);
 app.use('/api/dev', devRoutes);
 app.use('/api/customers', customerRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/print-covers', printCoverRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

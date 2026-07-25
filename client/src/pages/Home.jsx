@@ -8,13 +8,13 @@ import PhoneCard from '../components/PhoneCard';
 import Loading from '../components/Loading';
 
 const services = [
-  { title: 'Display Change', desc: 'Cracked or dead screen replacement for all major brands.' },
-  { title: 'Battery Replacement', desc: 'Original-spec batteries with warranty.' },
-  { title: 'Charging Pin Repair', desc: 'Fix slow or no-charging issues fast.' },
-  { title: 'Speaker / Mic Repair', desc: 'Restore call and media audio quality.' },
-  { title: 'Tempered Glass & Covers', desc: 'Protect your phone in style.' },
-  { title: 'Customised Photo Print Covers', desc: 'Get your own photo printed on a durable phone cover.' },
-  { title: 'Buy & Sell Old Phones', desc: 'Best price for your used phone, or grab a great deal.' },
+  { title: 'Display Change', desc: 'Cracked or dead screen replacement for all major brands.', to: '/repair' },
+  { title: 'Battery Replacement', desc: 'Original-spec batteries with warranty.', to: '/repair' },
+  { title: 'Charging Pin Repair', desc: 'Fix slow or no-charging issues fast.', to: '/repair' },
+  { title: 'Speaker / Mic Repair', desc: 'Restore call and media audio quality.', to: '/repair' },
+  { title: 'Tempered Glass & Covers', desc: 'Protect your phone in style.', to: '/products' },
+  { title: 'Customised Photo Print Covers', desc: 'Get your own photo printed on a durable phone cover.', to: '/print-cover' },
+  { title: 'Buy & Sell Old Phones', desc: 'Best price for your used phone, or grab a great deal.', to: '/sell-phone' },
 ];
 
 const trustBadges = [
@@ -170,13 +170,14 @@ export default function Home() {
           <h2 className="text-2xl font-bold text-navy-900 mb-8 text-center">Our Services</h2>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {services.map((s) => (
-              <div
+              <Link
                 key={s.title}
+                to={s.to}
                 className="bg-white border border-navy-100 rounded-xl p-6 shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-gold-300"
               >
                 <h3 className="font-semibold text-navy-800 mb-1">{s.title}</h3>
                 <p className="text-sm text-navy-500">{s.desc}</p>
-              </div>
+              </Link>
             ))}
           </div>
         </div>

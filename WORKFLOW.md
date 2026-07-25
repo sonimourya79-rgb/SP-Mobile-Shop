@@ -31,7 +31,11 @@ Profile flow, or re-seeding with a different `ADMIN_PASSWORD` in `server/.env`.
    status (received → diagnosing → in-progress → completed → delivered) under My Repairs.
 6. **Sell your phone** (`/sell-phone`) — submit device details and an expected price. Track status
    (pending → contacted → offer-made → purchased/rejected) under My Sell Requests.
-7. **Contact the shop** (`/contact`) — a general inquiry form; also emails the shop directly if email
+7. **Customised photo print cover** (`/print-cover`) — upload a photo plus device brand/model
+   (photo is required). Track status (received → printing → ready → delivered) and the quoted
+   price under My Account → Print Covers. Linked from the "Customised Photo Print Covers" card in
+   the Home page's Our Services section.
+8. **Contact the shop** (`/contact`) — a general inquiry form; also emails the shop directly if email
    is configured on the server.
 
 ## Admin Workflow
@@ -77,10 +81,12 @@ Log in with the admin account — you're redirected straight to `/admin`.
    and leave admin notes visible to the customer on their My Repairs page.
 5. **Sell Requests** (`/admin/sell-requests`) — filter by status, update status, set an offered
    price, and leave admin notes.
-6. **Orders** (`/admin/orders`) — filter by status, update status, add notes. Marking an order
+6. **Print Covers** (`/admin/print-covers`) — see the customer's uploaded photo (click to view full
+   size), device brand/model, filter by status, update status, set a price, and leave admin notes.
+7. **Orders** (`/admin/orders`) — filter by status, update status, add notes. Marking an order
    `confirmed` deducts accessory stock and marks any secondhand phones in it as sold — do this once
    you've actually confirmed the sale with the customer.
-7. **Contact Messages** (`/admin/messages`) — inbox of everything submitted via the Contact Us form;
+8. **Contact Messages** (`/admin/messages`) — inbox of everything submitted via the Contact Us form;
    mark as `new` / `read` / `replied`.
 8. **Send Offer** (`/admin/send-offer`) — compose a subject + message and email it to every
    registered customer in one go (e.g. a festival discount). Requires `EMAIL_USER`/`EMAIL_PASS` to be

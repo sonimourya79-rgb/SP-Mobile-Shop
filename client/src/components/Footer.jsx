@@ -21,6 +21,7 @@ export default function Footer() {
             <li><Link to="/secondhand" className="hover:text-gold-400">Secondhand Phones</Link></li>
             <li><Link to="/repair" className="hover:text-gold-400">Book a Repair</Link></li>
             <li><Link to="/sell-phone" className="hover:text-gold-400">Sell Your Phone</Link></li>
+            <li><Link to="/print-cover" className="hover:text-gold-400">Photo Print Covers</Link></li>
             <li><Link to="/about" className="hover:text-gold-400">About Us</Link></li>
           </ul>
         </div>

@@ -10,6 +10,7 @@ const links = [
   { to: '/admin/secondhand', label: 'Secondhand Phones' },
   { to: '/admin/repairs', label: 'Repair Requests' },
   { to: '/admin/sell-requests', label: 'Sell Requests' },
+  { to: '/admin/print-covers', label: 'Print Covers' },
   { to: '/admin/orders', label: 'Orders' },
   { to: '/admin/messages', label: 'Contact Messages' },
   { to: '/admin/send-offer', label: 'Send Offer' },
