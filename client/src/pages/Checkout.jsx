@@ -52,7 +52,7 @@ export default function Checkout() {
     <div className="max-w-3xl mx-auto px-4 py-10 grid gap-8 md:grid-cols-2">
       <div>
         <h1 className="text-2xl font-bold text-navy-900 mb-4">Checkout</h1>
-        <form onSubmit={handleSubmit} className="bg-white border border-navy-100 rounded-xl p-6 space-y-4 shadow-sm">
+        <form onSubmit={handleSubmit} className="bg-white border border-navy-100 border-t-4 border-t-gold-400 rounded-xl p-6 space-y-4 shadow-lg">
           <Field label="Full Name" required value={form.customerName} onChange={(v) => update('customerName', v)} />
           <Field label="Phone Number" required value={form.phone} onChange={(v) => update('phone', v)} />
           <div>
@@ -77,7 +77,7 @@ export default function Checkout() {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full bg-gold-400 text-navy-900 font-bold py-3 rounded-md hover:bg-gold-300 disabled:opacity-50"
+            className="w-full bg-gold-400 text-navy-900 font-bold py-3 rounded-md transition-all duration-200 hover:bg-gold-300 hover:scale-[1.01] disabled:opacity-50 disabled:hover:scale-100"
           >
             {submitting ? 'Placing order...' : `Place Order — ₹${totalAmount}`}
           </button>

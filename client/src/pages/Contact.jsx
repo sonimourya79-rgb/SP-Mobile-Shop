@@ -57,7 +57,7 @@ export default function Contact() {
               allowFullScreen
             />
           </div>
-          <div className="bg-white border border-navy-100 rounded-xl p-6 shadow-sm space-y-3 mt-4">
+          <div className="bg-white border border-navy-100 border-t-4 border-t-gold-400 rounded-xl p-6 shadow-lg space-y-3 mt-4">
             <div>
               <h3 className="text-xs uppercase tracking-wide text-gold-600 font-semibold">Phone</h3>
               <a href="tel:9653206528" className="text-navy-800 hover:text-gold-600">9653206528</a>
@@ -83,7 +83,7 @@ export default function Contact() {
 
         <div>
           <h2 className="text-lg font-semibold text-navy-800 mb-4">Send us a message</h2>
-          <form onSubmit={handleSubmit} className="bg-white border border-navy-100 rounded-xl p-6 space-y-4 shadow-sm">
+          <form onSubmit={handleSubmit} className="bg-white border border-navy-100 border-t-4 border-t-gold-400 rounded-xl p-6 space-y-4 shadow-lg">
             <div className="grid gap-4 sm:grid-cols-2">
               <Field label="Your Name" required value={form.name} onChange={(v) => update('name', v)} />
               <Field label="Phone (optional)" value={form.phone} onChange={(v) => update('phone', v)} />
@@ -103,7 +103,7 @@ export default function Contact() {
             <button
               type="submit"
               disabled={submitting}
-              className="w-full bg-navy-800 text-white font-semibold py-3 rounded-md hover:bg-navy-700 disabled:opacity-50"
+              className="w-full bg-navy-800 text-white font-semibold py-3 rounded-md transition-all duration-200 hover:bg-navy-700 hover:scale-[1.01] disabled:opacity-50 disabled:hover:scale-100"
             >
               {submitting ? 'Sending...' : 'Send Message'}
             </button>

@@ -55,12 +55,19 @@ export default function SellPhone() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-10">
-      <h1 className="text-3xl font-bold text-navy-900 mb-2">Sell Your Phone</h1>
+      <div className="flex items-center gap-3 mb-2">
+        <span className="h-10 w-10 rounded-full bg-navy-800 text-gold-400 flex items-center justify-center shrink-0">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M7 7h.01M7 3h5a1 1 0 01.7.3l8 8a1 1 0 010 1.4l-6 6a1 1 0 01-1.4 0l-8-8A1 1 0 015 10V5a2 2 0 012-2z" />
+          </svg>
+        </span>
+        <h1 className="text-3xl font-bold text-navy-900">Sell Your Phone</h1>
+      </div>
       <p className="text-navy-500 mb-8">
         Give us your phone's details and expected price — we'll reach out with a fair offer.
       </p>
 
-      <form onSubmit={handleSubmit} className="bg-white border border-navy-100 rounded-xl p-6 space-y-4 shadow-sm">
+      <form onSubmit={handleSubmit} className="bg-white border border-navy-100 border-t-4 border-t-gold-400 rounded-xl p-6 space-y-4 shadow-lg">
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="Your Name" required value={form.name} onChange={(v) => update('name', v)} />
           <Field label="Phone Number" required value={form.phone} onChange={(v) => update('phone', v)} />
@@ -108,7 +115,7 @@ export default function SellPhone() {
         <button
           type="submit"
           disabled={submitting}
-          className="w-full bg-navy-800 text-white font-semibold py-3 rounded-md hover:bg-navy-700 disabled:opacity-50"
+          className="w-full bg-navy-800 text-white font-semibold py-3 rounded-md transition-all duration-200 hover:bg-navy-700 hover:scale-[1.01] disabled:opacity-50 disabled:hover:scale-100"
         >
           {submitting ? 'Submitting...' : 'Submit Sell Request'}
         </button>
