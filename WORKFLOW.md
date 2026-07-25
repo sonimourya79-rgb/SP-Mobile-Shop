@@ -40,7 +40,11 @@ Log in with the admin account — you're redirected straight to `/admin`.
 
 1. **Dashboard** (`/admin`) — at-a-glance counts: new repair requests, repairs in progress, pending
    sell requests, pending orders, low-stock accessories, total accessories, available secondhand
-   phones, total orders. Each card links to the relevant screen.
+   phones, total orders. Each card links to the relevant screen. Below that, a **Profit Overview**
+   panel with a Day/Week/Month/Year toggle shows total revenue, cost of stock purchased, and net
+   profit for the selected range, broken down per period. Revenue = in-store Sale Entries +
+   confirmed/completed online orders' accessory items; cost = Purchase Entries. (Secondhand phone
+   sales aren't included since their acquisition cost isn't separately tracked.)
 2. **Customers** (`/admin/customers`) — see every registered customer (name, email, phone, join
    date). Add a customer account manually, edit their details, reset their password, or delete an
    account.
@@ -53,10 +57,11 @@ Log in with the admin account — you're redirected straight to `/admin`.
      Wired Earphones, Neckband Bluetooth, Bluetooth Earbuds, Bluetooth Speaker, Mobile Holder,
      OTG & Adapters, Other.
    - **Import from Excel/CSV** button (top of Catalog) — bulk-add accessories from a spreadsheet.
-     Upload a CSV with columns Name/Category/Price/Stock/Description (an Excel file must be saved
-     as CSV first — File → Save As → CSV), review/edit every parsed row and attach images per row
-     in the preview table, then import them all at once. Unrecognized categories default to
-     "Other" so nothing gets lost.
+     Click "Download the Excel template" for a ready-made `.xlsx` with the right columns and a
+     second sheet listing valid category names. Fill it in, use Excel's **File → Save As → CSV**,
+     then upload that CSV — review/edit every parsed row and attach images per row in the preview
+     table, then import them all at once. Unrecognized categories default to "Other" so nothing
+     gets lost.
    - **Purchase Entry** — record stock coming in from a supplier: pick the accessory, quantity, cost
      price, supplier (optional), notes — stock increases immediately and the entry is logged for
      record-keeping.

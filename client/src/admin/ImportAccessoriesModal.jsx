@@ -34,20 +34,7 @@ function normalizeRow(raw, categories) {
   };
 }
 
-function downloadSampleCsv() {
-  const csv = [
-    'Name,Category,Price,Stock,Description',
-    '"Tempered Glass 9H","Tempered Glass",149,50,"Edge-to-edge tempered glass"',
-    '"Silicone Back Cover","Back Cover",199,30,"Shockproof silicone cover"',
-  ].join('\n');
-  const blob = new Blob([csv], { type: 'text/csv' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'accessories-import-sample.csv';
-  a.click();
-  URL.revokeObjectURL(url);
-}
+const TEMPLATE_URL = '/templates/accessories-import-template.xlsx';
 
 export default function ImportAccessoriesModal({ categories, onClose, onImported }) {
   const [rows, setRows] = useState(null); // null = no file parsed yet
@@ -133,16 +120,18 @@ export default function ImportAccessoriesModal({ categories, onClose, onImported
           <div className="space-y-4">
             <div className="bg-navy-50 border border-navy-100 rounded-lg p-4 text-sm text-navy-600">
               <p className="mb-2">
-                Upload a <strong>CSV file</strong> with columns: <code>Name</code>, <code>Category</code>,{' '}
-                <code>Price</code>, <code>Stock</code>, <code>Description</code> (Category/Description optional).
+                <strong>Step 1:</strong>{' '}
+                <a href={TEMPLATE_URL} download className="text-navy-700 underline hover:text-gold-600 font-medium">
+                  Download the Excel template
+                </a>{' '}
+                and fill in your accessories — columns are <code>Name</code>, <code>Category</code>,{' '}
+                <code>Price</code>, <code>Stock</code>, <code>Description</code> (Category/Description optional;
+                the template's second sheet lists the exact category names to use).
               </p>
-              <p className="mb-2">
-                If your list is in Excel, open it and use <strong>File → Save As → CSV</strong> first, then upload
-                that file here.
+              <p>
+                <strong>Step 2:</strong> in Excel, use <strong>File → Save As → CSV</strong> to save your filled-in
+                sheet, then upload that CSV file below.
               </p>
-              <button type="button" onClick={downloadSampleCsv} className="text-navy-700 underline hover:text-gold-600">
-                Download a sample CSV
-              </button>
             </div>
             <input type="file" accept=".csv,text/csv" onChange={handleFile} className="w-full text-sm" />
           </div>

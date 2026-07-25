@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../api/axios';
 import Loading from '../components/Loading';
+import ProfitPanel from './ProfitPanel';
 
 const CARDS = [
   { key: 'pendingRepairs', label: 'New Repair Requests', to: '/admin/repairs' },
@@ -38,6 +39,8 @@ export default function Dashboard() {
           </Link>
         ))}
       </div>
+
+      <ProfitPanel />
     </div>
   );
 }

@@ -1,10 +1,11 @@
 const express = require('express');
 const { protect, adminOnly } = require('../middleware/auth');
 const asyncHandler = require('../middleware/asyncHandler');
-const { stats } = require('../controllers/dashboardController');
+const { stats, profit } = require('../controllers/dashboardController');
 
 const router = express.Router();
 
 router.get('/stats', protect, adminOnly, asyncHandler(stats));
+router.get('/profit', protect, adminOnly, asyncHandler(profit));
 
 module.exports = router;
