@@ -1,5 +1,11 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import api from '../api/axios';
 import FloatingAccessoryIcons from '../components/FloatingAccessoryIcons';
+import QuickContactBar from '../components/QuickContactBar';
+import ProductCard from '../components/ProductCard';
+import PhoneCard from '../components/PhoneCard';
+import Loading from '../components/Loading';
 
 const services = [
   { title: 'Display Change', desc: 'Cracked or dead screen replacement for all major brands.' },
@@ -10,7 +16,38 @@ const services = [
   { title: 'Buy & Sell Old Phones', desc: 'Best price for your used phone, or grab a great deal.' },
 ];
 
+const trustBadges = [
+  {
+    title: 'Genuine Accessories',
+    desc: 'Quality-checked products, never compromised.',
+    path: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622C17.176 19.29 21 14.591 21 9a12.02 12.02 0 00-.382-3.016z',
+  },
+  {
+    title: 'Expert Technicians',
+    desc: 'Experienced hands for every repair job.',
+    path: 'M11 5a3 3 0 015.9-1.2l-3.3 3.3 1.3 1.3 3.3-3.3A3 3 0 0116 9.9L7.6 18.3a2 2 0 11-2.9-2.9L13.1 7a3 3 0 01-2.1-2z',
+  },
+  {
+    title: 'Quick Turnaround',
+    desc: 'Most repairs done same day.',
+    path: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z',
+  },
+  {
+    title: 'Best Price Guarantee',
+    desc: 'Fair, transparent pricing — every time.',
+    path: 'M7 7h.01M7 3h5a1 1 0 01.7.3l8 8a1 1 0 010 1.4l-6 6a1 1 0 01-1.4 0l-8-8A1 1 0 015 10V5a2 2 0 012-2z',
+  },
+];
+
 export default function Home() {
+  const [featuredProducts, setFeaturedProducts] = useState(null);
+  const [featuredPhones, setFeaturedPhones] = useState(null);
+
+  useEffect(() => {
+    api.get('/products').then((res) => setFeaturedProducts(res.data.slice(0, 4)));
+    api.get('/secondhand').then((res) => setFeaturedPhones(res.data.slice(0, 4)));
+  }, []);
+
   return (
     <div>
       <section className="relative bg-navy-900 text-white overflow-hidden">
@@ -72,36 +109,79 @@ export default function Home() {
       </section>
 
       <section className="max-w-7xl mx-auto px-4 py-14">
-        <h2 className="text-2xl font-bold text-navy-900 mb-8 text-center">Our Services</h2>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {services.map((s) => (
-            <div
-              key={s.title}
-              className="bg-white border border-navy-100 rounded-xl p-6 shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-gold-300"
-            >
-              <h3 className="font-semibold text-navy-800 mb-1">{s.title}</h3>
-              <p className="text-sm text-navy-500">{s.desc}</p>
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {trustBadges.map((b) => (
+            <div key={b.title} className="text-center px-2">
+              <span className="h-14 w-14 rounded-full bg-navy-800 text-gold-400 flex items-center justify-center mx-auto mb-3">
+                <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.6} d={b.path} />
+                </svg>
+              </span>
+              <h3 className="font-semibold text-navy-900 mb-1">{b.title}</h3>
+              <p className="text-sm text-navy-500">{b.desc}</p>
             </div>
           ))}
         </div>
       </section>
 
       <section className="bg-navy-50 py-14">
-        <div className="max-w-7xl mx-auto px-4 grid gap-6 sm:grid-cols-3 text-center">
-          <Link to="/products" className="bg-white rounded-xl p-8 shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-            <h3 className="text-lg font-bold text-navy-800 mb-2">Browse Accessories</h3>
-            <p className="text-sm text-navy-500">Covers, chargers, batteries, cables &amp; more.</p>
-          </Link>
-          <Link to="/secondhand" className="bg-white rounded-xl p-8 shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-            <h3 className="text-lg font-bold text-navy-800 mb-2">Secondhand Phones</h3>
-            <p className="text-sm text-navy-500">Quality checked, great prices.</p>
-          </Link>
-          <Link to="/repair" className="bg-white rounded-xl p-8 shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-            <h3 className="text-lg font-bold text-navy-800 mb-2">Book a Repair</h3>
-            <p className="text-sm text-navy-500">Quick turnaround, fair pricing.</p>
-          </Link>
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-2xl font-bold text-navy-900">Popular Accessories</h2>
+            <Link to="/products" className="text-navy-700 font-semibold hover:text-gold-600 transition-colors text-sm">
+              View All &rarr;
+            </Link>
+          </div>
+          {featuredProducts === null ? (
+            <Loading />
+          ) : (
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {featuredProducts.map((p) => (
+                <ProductCard key={p._id} product={p} />
+              ))}
+            </div>
+          )}
         </div>
       </section>
+
+      <section className="max-w-7xl mx-auto px-4 py-14">
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-2xl font-bold text-navy-900">Secondhand Phones in Stock</h2>
+          <Link to="/secondhand" className="text-navy-700 font-semibold hover:text-gold-600 transition-colors text-sm">
+            View All &rarr;
+          </Link>
+        </div>
+        {featuredPhones === null ? (
+          <Loading />
+        ) : featuredPhones.length === 0 ? (
+          <p className="text-navy-400 text-center py-8">No secondhand phones available right now.</p>
+        ) : (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {featuredPhones.map((p) => (
+              <PhoneCard key={p._id} phone={p} />
+            ))}
+          </div>
+        )}
+      </section>
+
+      <section className="bg-navy-50 py-14">
+        <div className="max-w-7xl mx-auto px-4">
+          <h2 className="text-2xl font-bold text-navy-900 mb-8 text-center">Our Services</h2>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {services.map((s) => (
+              <div
+                key={s.title}
+                className="bg-white border border-navy-100 rounded-xl p-6 shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-gold-300"
+              >
+                <h3 className="font-semibold text-navy-800 mb-1">{s.title}</h3>
+                <p className="text-sm text-navy-500">{s.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <QuickContactBar />
     </div>
   );
 }
