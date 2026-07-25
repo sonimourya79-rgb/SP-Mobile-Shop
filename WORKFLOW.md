@@ -45,11 +45,18 @@ Log in with the admin account — you're redirected straight to `/admin`.
    date). Add a customer account manually, edit their details, reset their password, or delete an
    account.
 3. **Accessories** (`/admin/products`) — three tabs:
-   - **Catalog** — add/edit/delete accessories: name, description, category, price, stock, active
-     toggle, and up to 6 images per item (drag in files, remove individual images with the × on the
-     thumbnail). Categories cover every accessory type: Tempered Glass, Back Cover, Charger, Charging
-     Cable, Power Bank, Battery, Wired Earphones, Neckband Bluetooth, Bluetooth Earbuds, Bluetooth
-     Speaker, Mobile Holder, OTG & Adapters, Other.
+   - **Catalog** — grouped by category into collapsible sections (click a section header to
+     collapse/expand) so a large catalog stays easy to scan. Add/edit/delete accessories: name,
+     description, category, price, stock, active toggle, and up to 6 images per item (drag in
+     files, remove individual images with the × on the thumbnail). Categories cover every
+     accessory type: Tempered Glass, Back Cover, Charger, Charging Cable, Power Bank, Battery,
+     Wired Earphones, Neckband Bluetooth, Bluetooth Earbuds, Bluetooth Speaker, Mobile Holder,
+     OTG & Adapters, Other.
+   - **Import from Excel/CSV** button (top of Catalog) — bulk-add accessories from a spreadsheet.
+     Upload a CSV with columns Name/Category/Price/Stock/Description (an Excel file must be saved
+     as CSV first — File → Save As → CSV), review/edit every parsed row and attach images per row
+     in the preview table, then import them all at once. Unrecognized categories default to
+     "Other" so nothing gets lost.
    - **Purchase Entry** — record stock coming in from a supplier: pick the accessory, quantity, cost
      price, supplier (optional), notes — stock increases immediately and the entry is logged for
      record-keeping.

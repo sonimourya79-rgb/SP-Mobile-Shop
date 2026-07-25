@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import api from '../api/axios';
 import { resolveImage } from '../api/config';
 import Loading from '../components/Loading';
+import ImportAccessoriesModal from './ImportAccessoriesModal';
 
-const CATEGORIES = [
+export const CATEGORIES = [
   'Tempered Glass',
   'Back Cover',
   'Charger',
@@ -29,6 +30,8 @@ export default function ProductCatalogTab() {
   const [form, setForm] = useState(emptyForm);
   const [files, setFiles] = useState([]);
   const [saving, setSaving] = useState(false);
+  const [collapsed, setCollapsed] = useState({});
+  const [importOpen, setImportOpen] = useState(false);
 
   function load() {
     setLoading(true);
@@ -36,6 +39,22 @@ export default function ProductCatalogTab() {
   }
 
   useEffect(load, []);
+
+  const groups = useMemo(() => {
+    const byCategory = new Map();
+    for (const p of products) {
+      const key = CATEGORIES.includes(p.category) ? p.category : 'Other';
+      if (!byCategory.has(key)) byCategory.set(key, []);
+      byCategory.get(key).push(p);
+    }
+    return CATEGORIES.map((cat) => ({ category: cat, items: byCategory.get(cat) || [] })).filter(
+      (g) => g.items.length > 0
+    );
+  }, [products]);
+
+  function toggleCategory(cat) {
+    setCollapsed((c) => ({ ...c, [cat]: !c[cat] }));
+  }
 
   function openNew() {
     setForm(emptyForm);
@@ -110,7 +129,10 @@ export default function ProductCatalogTab() {
 
   return (
     <div>
-      <div className="flex items-center justify-end mb-4">
+      <div className="flex items-center justify-end gap-3 mb-4">
+        <button onClick={() => setImportOpen(true)} className="border border-navy-300 text-navy-700 font-semibold px-4 py-2 rounded-md hover:bg-navy-50">
+          Import from Excel/CSV
+        </button>
         <button onClick={openNew} className="bg-navy-800 text-white font-semibold px-4 py-2 rounded-md hover:bg-navy-700">
           + Add Accessory
         </button>
@@ -121,82 +143,105 @@ export default function ProductCatalogTab() {
       ) : products.length === 0 ? (
         <p className="text-navy-400 text-center py-16">No accessories yet.</p>
       ) : (
-        <>
-          {/* Desktop table */}
-          <div className="hidden md:block bg-white rounded-xl border border-navy-100 overflow-hidden shadow-sm">
-            <table className="w-full text-sm">
-              <thead className="bg-navy-50 text-navy-500 text-left">
-                <tr>
-                  <th className="p-3">Image</th>
-                  <th className="p-3">Name</th>
-                  <th className="p-3">Category</th>
-                  <th className="p-3">Price</th>
-                  <th className="p-3">Stock</th>
-                  <th className="p-3">Active</th>
-                  <th className="p-3 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-navy-50">
-                {products.map((p) => (
-                  <tr key={p._id}>
-                    <td className="p-3">
-                      {p.images?.length > 0 ? (
-                        <img src={resolveImage(p.images[0])} alt="" className="h-10 w-10 object-cover rounded-md" />
-                      ) : (
-                        <span className="text-navy-300 text-xs">—</span>
-                      )}
-                    </td>
-                    <td className="p-3 font-medium text-navy-900">{p.name}</td>
-                    <td className="p-3 text-navy-500">{p.category}</td>
-                    <td className="p-3 text-navy-700">₹{p.price}</td>
-                    <td className={`p-3 ${p.stock <= 5 ? 'text-red-500 font-semibold' : 'text-navy-700'}`}>{p.stock}</td>
-                    <td className="p-3">{p.isActive ? 'Yes' : 'No'}</td>
-                    <td className="p-3 text-right space-x-2">
-                      <button onClick={() => openEdit(p)} className="text-navy-700 hover:text-navy-900 font-medium">Edit</button>
-                      <button onClick={() => handleDelete(p)} className="text-red-500 hover:text-red-600 font-medium">Delete</button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+        <div className="space-y-4">
+          {groups.map((group) => {
+            const isCollapsed = !!collapsed[group.category];
+            return (
+              <div key={group.category} className="bg-white rounded-xl border border-navy-100 shadow-sm overflow-hidden">
+                <button
+                  onClick={() => toggleCategory(group.category)}
+                  className="w-full flex items-center justify-between px-4 py-3 bg-navy-50 hover:bg-navy-100 text-left"
+                >
+                  <span className="font-semibold text-navy-800">
+                    {group.category} <span className="text-navy-400 font-normal">({group.items.length})</span>
+                  </span>
+                  <svg
+                    className={`w-4 h-4 text-navy-500 transition-transform ${isCollapsed ? '' : 'rotate-180'}`}
+                    fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
 
-          {/* Mobile card layout */}
-          <div className="md:hidden space-y-3">
-            {products.map((p) => (
-              <div key={p._id} className="bg-white border border-navy-100 rounded-xl p-4 shadow-sm">
-                <div className="flex gap-3">
-                  {p.images?.length > 0 && (
-                    <img src={resolveImage(p.images[0])} alt="" className="h-16 w-16 object-cover rounded-lg shrink-0" />
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-navy-900 truncate">{p.name}</p>
-                    <p className="text-xs text-navy-500">{p.category}</p>
-                    <div className="flex items-center gap-3 mt-1.5 text-sm">
-                      <span className="font-bold text-navy-800">₹{p.price}</span>
-                      <span className={`${p.stock <= 5 ? 'text-red-500 font-semibold' : 'text-navy-600'}`}>
-                        Stock: {p.stock}
-                      </span>
-                      {p.isActive ? (
-                        <span className="text-xs text-green-600">Active</span>
-                      ) : (
-                        <span className="text-xs text-navy-400">Inactive</span>
-                      )}
+                {!isCollapsed && (
+                  <>
+                    {/* Desktop table */}
+                    <div className="hidden md:block">
+                      <table className="w-full text-sm">
+                        <thead className="bg-navy-50/60 text-navy-500 text-left">
+                          <tr>
+                            <th className="p-3">Image</th>
+                            <th className="p-3">Name</th>
+                            <th className="p-3">Price</th>
+                            <th className="p-3">Stock</th>
+                            <th className="p-3">Active</th>
+                            <th className="p-3 text-right">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-navy-50">
+                          {group.items.map((p) => (
+                            <tr key={p._id}>
+                              <td className="p-3">
+                                {p.images?.length > 0 ? (
+                                  <img src={resolveImage(p.images[0])} alt="" className="h-10 w-10 object-cover rounded-md" />
+                                ) : (
+                                  <span className="text-navy-300 text-xs">—</span>
+                                )}
+                              </td>
+                              <td className="p-3 font-medium text-navy-900">{p.name}</td>
+                              <td className="p-3 text-navy-700">₹{p.price}</td>
+                              <td className={`p-3 ${p.stock <= 5 ? 'text-red-500 font-semibold' : 'text-navy-700'}`}>{p.stock}</td>
+                              <td className="p-3">{p.isActive ? 'Yes' : 'No'}</td>
+                              <td className="p-3 text-right space-x-2">
+                                <button onClick={() => openEdit(p)} className="text-navy-700 hover:text-navy-900 font-medium">Edit</button>
+                                <button onClick={() => handleDelete(p)} className="text-red-500 hover:text-red-600 font-medium">Delete</button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
                     </div>
-                  </div>
-                </div>
-                <div className="flex gap-2 mt-3 pt-3 border-t border-navy-50">
-                  <button onClick={() => openEdit(p)} className="flex-1 text-center border border-navy-200 rounded-md py-1.5 text-sm font-medium text-navy-700 hover:bg-navy-50">
-                    Edit
-                  </button>
-                  <button onClick={() => handleDelete(p)} className="flex-1 text-center border border-red-200 rounded-md py-1.5 text-sm font-medium text-red-500 hover:bg-red-50">
-                    Delete
-                  </button>
-                </div>
+
+                    {/* Mobile card layout */}
+                    <div className="md:hidden divide-y divide-navy-50">
+                      {group.items.map((p) => (
+                        <div key={p._id} className="p-4">
+                          <div className="flex gap-3">
+                            {p.images?.length > 0 && (
+                              <img src={resolveImage(p.images[0])} alt="" className="h-16 w-16 object-cover rounded-lg shrink-0" />
+                            )}
+                            <div className="flex-1 min-w-0">
+                              <p className="font-semibold text-navy-900 truncate">{p.name}</p>
+                              <div className="flex items-center gap-3 mt-1.5 text-sm">
+                                <span className="font-bold text-navy-800">₹{p.price}</span>
+                                <span className={`${p.stock <= 5 ? 'text-red-500 font-semibold' : 'text-navy-600'}`}>
+                                  Stock: {p.stock}
+                                </span>
+                                {p.isActive ? (
+                                  <span className="text-xs text-green-600">Active</span>
+                                ) : (
+                                  <span className="text-xs text-navy-400">Inactive</span>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                          <div className="flex gap-2 mt-3 pt-3 border-t border-navy-50">
+                            <button onClick={() => openEdit(p)} className="flex-1 text-center border border-navy-200 rounded-md py-1.5 text-sm font-medium text-navy-700 hover:bg-navy-50">
+                              Edit
+                            </button>
+                            <button onClick={() => handleDelete(p)} className="flex-1 text-center border border-red-200 rounded-md py-1.5 text-sm font-medium text-red-500 hover:bg-red-50">
+                              Delete
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                )}
               </div>
-            ))}
-          </div>
-        </>
+            );
+          })}
+        </div>
       )}
 
       {editing && (
@@ -274,6 +319,17 @@ export default function ProductCatalogTab() {
             </form>
           </div>
         </div>
+      )}
+
+      {importOpen && (
+        <ImportAccessoriesModal
+          categories={CATEGORIES}
+          onClose={() => setImportOpen(false)}
+          onImported={() => {
+            setImportOpen(false);
+            load();
+          }}
+        />
       )}
     </div>
   );
