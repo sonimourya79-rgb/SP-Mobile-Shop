@@ -89,22 +89,22 @@ Log in with the admin account — you're redirected straight to `/admin`.
 8. **Contact Messages** (`/admin/messages`) — inbox of everything submitted via the Contact Us form;
    mark as `new` / `read` / `replied`.
 8. **Send Offer** (`/admin/send-offer`) — compose a subject + message and email it to every
-   registered customer in one go (e.g. a festival discount). Requires `EMAIL_USER`/`EMAIL_PASS` to be
+   registered customer in one go (e.g. a festival discount). Requires `BREVO_API_KEY` to be
    configured in `server/.env` — otherwise it will tell you nothing was sent.
 
 ## Email Setup (optional but recommended)
 
-Both the Contact form notification and the "Send Offer" broadcast rely on the email settings in
-`server/.env`:
+Both the Contact form notification and the "Send Offer" broadcast are sent via Brevo's email API
+(plain HTTPS — needed because Render's free tier can't reach Gmail's SMTP servers). Settings live
+in `server/.env`:
 
 ```
-EMAIL_HOST=smtp.gmail.com
-EMAIL_PORT=465
-EMAIL_SECURE=true
-EMAIL_USER=aa6871678@gmail.com
-EMAIL_PASS=<Gmail App Password, not the normal password>
-EMAIL_FROM=SP Mobile <aa6871678@gmail.com>
+BREVO_API_KEY=<API key from your Brevo account>
+EMAIL_FROM_ADDRESS=spmobiletechnology@gmail.com
+EMAIL_FROM_NAME=SP Mobile
 ```
 
-To get a Gmail App Password: enable 2-Step Verification on the Gmail account, then create one at
-https://myaccount.google.com/apppasswords. Paste it into `EMAIL_PASS` and restart the server.
+To get a Brevo API key: sign up free at https://onboarding.brevo.com/account/register, verify
+`EMAIL_FROM_ADDRESS` as a sender under **Senders & IP → Senders**, then create a key under
+**SMTP & API → API Keys**. Paste it into `BREVO_API_KEY` and restart the server. See
+[DEPLOYMENT.md](DEPLOYMENT.md) for the full step-by-step walkthrough.

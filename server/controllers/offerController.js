@@ -45,7 +45,7 @@ async function send(req, res) {
   let sent = 0;
   let lastFailureReason = null;
   for (const batch of batches) {
-    const result = await sendMail({ to: process.env.EMAIL_FROM || process.env.EMAIL_USER, bcc: batch, subject, html });
+    const result = await sendMail({ to: process.env.EMAIL_FROM_ADDRESS || process.env.ADMIN_EMAIL, bcc: batch, subject, html });
     if (result.sent) {
       sent += batch.length;
     } else {

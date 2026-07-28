@@ -9,7 +9,8 @@ For login credentials and a walkthrough of what each role can do, see **[WORKFLO
 ## Tech Stack
 
 - **Client**: React (Vite) + React Router + Tailwind CSS + Axios
-- **Server**: Node.js + Express + Mongoose (MongoDB) + JWT auth + Multer (image uploads) + Nodemailer (email)
+- **Server**: Node.js + Express + Mongoose (MongoDB) + JWT auth + Multer (image uploads, stored on
+  Cloudinary in production) + Brevo (transactional email via HTTP API)
 
 ## Project Structure
 
@@ -40,9 +41,14 @@ Shop/
    - `MONGO_URI` — MongoDB connection string
    - `JWT_SECRET` — any long random string
    - `ADMIN_EMAIL` / `ADMIN_PASSWORD` — the admin account created by the seed script
-   - `EMAIL_USER` / `EMAIL_PASS` — optional, needed for the contact form email notification and the
-     admin "Send Offer" bulk email feature. See the comments in `.env.example` for how to generate a
-     Gmail App Password. The site works fine without these — emails are just skipped.
+   - `CLOUDINARY_CLOUD_NAME` / `CLOUDINARY_API_KEY` / `CLOUDINARY_API_SECRET` — optional for local
+     dev (uploads just save to `server/uploads/` on disk if left blank), but **required** in
+     production on hosts with an ephemeral filesystem (e.g. Render's free tier), otherwise uploaded
+     images vanish on every restart. See the comments in `.env.example` for how to get these from a
+     free Cloudinary account.
+   - `BREVO_API_KEY` — optional, needed for the contact form email notification and the admin
+     "Send Offer" bulk email feature. See the comments in `.env.example` for how to get a free Brevo
+     API key. The site works fine without it — emails are just skipped.
 
 3. Load demo data. Either:
    - **Run the seed script** (creates the admin account + realistic sample accessories, secondhand

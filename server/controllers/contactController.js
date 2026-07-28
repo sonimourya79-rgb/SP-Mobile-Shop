@@ -9,7 +9,7 @@ async function create(req, res) {
 
   const contact = await ContactMessage.create({ name, email, phone, subject, message });
 
-  const shopEmail = process.env.ADMIN_EMAIL || process.env.EMAIL_USER;
+  const shopEmail = process.env.ADMIN_EMAIL || process.env.EMAIL_FROM_ADDRESS;
   if (shopEmail) {
     sendMail({
       to: shopEmail,

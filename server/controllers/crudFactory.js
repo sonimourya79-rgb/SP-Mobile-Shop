@@ -1,23 +1,10 @@
-const path = require('path');
-const fs = require('fs');
-
-function imageUrls(files) {
-  if (!files || files.length === 0) return [];
-  return files.map((f) => `/uploads/${f.filename}`);
-}
-
-function deleteImageFiles(urls) {
-  (urls || []).forEach((url) => {
-    const filePath = path.join(__dirname, '..', url.replace(/^\/+/, ''));
-    fs.unlink(filePath, () => {});
-  });
-}
+const { storeImages, deleteImages } = require('../utils/imageStore');
 
 /**
  * Builds standard list/getById/create/update/remove handlers for a catalog model
  * that has an `images` array field and simple exact-match filters + text search.
  */
-function crudFactory(Model, { searchFields = [], filterFields = [], publicFilter = {} } = {}) {
+function crudFactory(Model, { searchFields = [], filterFields = [], publicFilter = {}, folder = 'sp-mobile' } = {}) {
   function buildQuery(req, includePublicFilter) {
     const query = includePublicFilter ? { ...publicFilter } : {};
     filterFields.forEach((field) => {
@@ -47,7 +34,7 @@ function crudFactory(Model, { searchFields = [], filterFields = [], publicFilter
   }
 
   async function create(req, res) {
-    const images = imageUrls(req.files);
+    const images = await storeImages(req.files, folder);
     const item = await Model.create({ ...req.body, images });
     res.status(201).json(item);
   }
@@ -56,12 +43,12 @@ function crudFactory(Model, { searchFields = [], filterFields = [], publicFilter
     const item = await Model.findById(req.params.id);
     if (!item) return res.status(404).json({ message: 'Not found' });
 
-    const newImages = imageUrls(req.files);
+    const newImages = await storeImages(req.files, folder);
     Object.assign(item, req.body);
     if (newImages.length) item.images = [...item.images, ...newImages];
     if (req.body.removeImages) {
       const toRemove = Array.isArray(req.body.removeImages) ? req.body.removeImages : [req.body.removeImages];
-      deleteImageFiles(toRemove);
+      await deleteImages(toRemove);
       item.images = item.images.filter((img) => !toRemove.includes(img));
     }
     await item.save();
@@ -71,7 +58,7 @@ function crudFactory(Model, { searchFields = [], filterFields = [], publicFilter
   async function remove(req, res) {
     const item = await Model.findById(req.params.id);
     if (!item) return res.status(404).json({ message: 'Not found' });
-    deleteImageFiles(item.images);
+    await deleteImages(item.images);
     await item.deleteOne();
     res.json({ message: 'Deleted' });
   }

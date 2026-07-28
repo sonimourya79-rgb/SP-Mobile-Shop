@@ -5,4 +5,5 @@ module.exports = crudFactory(Product, {
   searchFields: ['name', 'description'],
   filterFields: ['category'],
   publicFilter: { isActive: true },
+  folder: 'sp-mobile/products',
 });

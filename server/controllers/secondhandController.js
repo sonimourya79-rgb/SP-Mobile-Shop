@@ -5,4 +5,5 @@ module.exports = crudFactory(SecondhandPhone, {
   searchFields: ['brand', 'model', 'description'],
   filterFields: ['brand', 'condition', 'status'],
   publicFilter: { isActive: true, status: 'available' },
+  folder: 'sp-mobile/secondhand',
 });

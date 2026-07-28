@@ -1,50 +1,84 @@
-const nodemailer = require('nodemailer');
+// Render's free tier cannot reach Gmail's SMTP ports (outbound SMTP is
+// commonly blocked on free/shared hosting tiers), so SMTP just hangs or times
+// out no matter how the transport is configured. Brevo's transactional email
+// API is plain HTTPS (port 443), which works from any host that can make a
+// normal outbound web request.
+const BREVO_API_URL = 'https://api.brevo.com/v3/smtp/email';
+const REQUEST_TIMEOUT_MS = 15000;
 
-let transporter = null;
+function parseAddress(input) {
+  if (!input) return null;
+  const str = String(input).trim();
+  const match = str.match(/^(.*)<(.+)>$/);
+  if (match) {
+    const name = match[1].trim().replace(/^"|"$/g, '');
+    const email = match[2].trim();
+    return email ? { email, ...(name ? { name } : {}) } : null;
+  }
+  return str ? { email: str } : null;
+}
 
-// Without explicit timeouts, a blocked/unreachable SMTP connection (common on
-// some cloud hosts' outbound networking) hangs indefinitely instead of
-// failing — the request never resolves, so the client just spins forever.
-const CONNECTION_TIMEOUT_MS = 10000;
-const GREETING_TIMEOUT_MS = 10000;
-const SOCKET_TIMEOUT_MS = 15000;
-
-function getTransporter() {
-  if (transporter) return transporter;
-  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) return null;
-
-  transporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-    port: Number(process.env.EMAIL_PORT) || 465,
-    secure: String(process.env.EMAIL_SECURE || 'true') === 'true',
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-    connectionTimeout: CONNECTION_TIMEOUT_MS,
-    greetingTimeout: GREETING_TIMEOUT_MS,
-    socketTimeout: SOCKET_TIMEOUT_MS,
-  });
-  return transporter;
+function toRecipientList(input) {
+  if (!input) return [];
+  const items = Array.isArray(input) ? input : String(input).split(',');
+  return items.map(parseAddress).filter(Boolean);
 }
 
 function isConfigured() {
-  return Boolean(process.env.EMAIL_USER && process.env.EMAIL_PASS);
+  return Boolean(process.env.BREVO_API_KEY);
+}
+
+function senderAddress() {
+  return {
+    email: process.env.EMAIL_FROM_ADDRESS || process.env.ADMIN_EMAIL,
+    name: process.env.EMAIL_FROM_NAME || 'SP Mobile',
+  };
 }
 
 async function sendMail({ to, bcc, subject, html }) {
-  const t = getTransporter();
-  if (!t) {
-    console.warn('Email not configured (EMAIL_USER/EMAIL_PASS missing) — skipping send:', subject);
+  if (!isConfigured()) {
+    console.warn('Email not configured (BREVO_API_KEY missing) — skipping send:', subject);
     return { sent: false, reason: 'not_configured' };
   }
-  const from = process.env.EMAIL_FROM || `SP Mobile <${process.env.EMAIL_USER}>`;
+
+  const toList = toRecipientList(to);
+  const bccList = toRecipientList(bcc);
+  if (toList.length === 0) {
+    return { sent: false, reason: 'no_recipient' };
+  }
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+
   try {
-    await t.sendMail({ from, to, bcc, subject, html });
+    const response = await fetch(BREVO_API_URL, {
+      method: 'POST',
+      headers: {
+        'api-key': process.env.BREVO_API_KEY,
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify({
+        sender: senderAddress(),
+        to: toList,
+        ...(bccList.length ? { bcc: bccList } : {}),
+        subject,
+        htmlContent: html,
+      }),
+      signal: controller.signal,
+    });
+
+    if (!response.ok) {
+      const body = await response.text().catch(() => '');
+      throw new Error(`Brevo API error ${response.status}: ${body.slice(0, 300)}`);
+    }
     return { sent: true };
   } catch (err) {
-    console.error('Failed to send email:', err.message);
-    return { sent: false, reason: err.message };
+    const reason = err.name === 'AbortError' ? 'Connection timeout' : err.message;
+    console.error('Failed to send email:', reason);
+    return { sent: false, reason };
+  } finally {
+    clearTimeout(timeout);
   }
 }
 

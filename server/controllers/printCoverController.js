@@ -1,5 +1,6 @@
 const PrintCoverRequest = require('../models/PrintCoverRequest');
 const { notifyAdmins, notifyUser } = require('../utils/notify');
+const { storeImage } = require('../utils/imageStore');
 
 async function create(req, res) {
   const { name, phone, email, deviceBrand, deviceModel, notes } = req.body;
@@ -10,6 +11,8 @@ async function create(req, res) {
     return res.status(400).json({ message: 'Please upload the photo you want printed' });
   }
 
+  const photo = await storeImage(req.file, 'sp-mobile/print-covers');
+
   const request = await PrintCoverRequest.create({
     user: req.user ? req.user._id : undefined,
     name,
@@ -18,7 +21,7 @@ async function create(req, res) {
     deviceBrand,
     deviceModel,
     notes,
-    photo: `/uploads/${req.file.filename}`,
+    photo,
   });
 
   await notifyAdmins(

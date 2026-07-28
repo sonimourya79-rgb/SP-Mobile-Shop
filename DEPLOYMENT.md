@@ -56,7 +56,8 @@ the two deployed URLs together).
    | `ADMIN_EMAIL` | `aa6871678@gmail.com` |
    | `ADMIN_PASSWORD` | a password you choose |
    | `ADMIN_PHONE` | `9653206528` |
-   | `EMAIL_USER`, `EMAIL_PASS`, `EMAIL_FROM` | optional, see WORKFLOW.md — leave blank to skip email features |
+   | `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` | **required** on Render — see [step 6](#6-cloudinary-persistent-image-uploads) below. Without these, uploaded images disappear on every restart/redeploy. |
+   | `BREVO_API_KEY`, `EMAIL_FROM_ADDRESS`, `EMAIL_FROM_NAME` | optional, see WORKFLOW.md — leave blank to skip email features. See [step 7](#7-brevo-transactional-email) below. |
 
    Don't set `PORT` — Render sets it automatically and the app already reads `process.env.PORT`.
 5. Click **Create Web Service**. Wait for the first deploy to finish, then copy your live URL,
@@ -112,19 +113,54 @@ Run the seed script from your own machine, pointed at Atlas instead of your loca
 
 ---
 
+## 6. Cloudinary (persistent image uploads)
+
+Render's free web services don't have a persistent disk — without Cloudinary, any image
+uploaded through the admin panel (Accessories/Secondhand Phones) or the customer Print Cover
+form disappears the next time Render restarts or redeploys. Cloudinary stores the images
+externally instead, so they survive restarts.
+
+1. Go to https://cloudinary.com/users/register/free and sign up (Google sign-in with
+   sonimourya79@gmail.com works too).
+2. Your **Cloud name**, **API Key**, and **API Secret** are shown right on the dashboard home
+   page after signup (under "Product Environment Credentials" / "API Keys").
+3. In Render → your `sp-mobile-api` service → **Environment**, add:
+   | Key | Value |
+   |---|---|
+   | `CLOUDINARY_CLOUD_NAME` | from the Cloudinary dashboard |
+   | `CLOUDINARY_API_KEY` | from the Cloudinary dashboard |
+   | `CLOUDINARY_API_SECRET` | from the Cloudinary dashboard |
+4. Save — Render redeploys automatically. New uploads now go to Cloudinary and persist
+   permanently. (The seed-generated images in `server/uploads/seed-*.png` already work fine
+   either way, since they're committed to git and restored on every deploy.)
+
+If these env vars are left blank, the app still works — it just falls back to local disk
+storage, which is fine for local development but not for Render.
+
+## 7. Brevo (transactional email)
+
+Render's free tier cannot make outbound SMTP connections (Gmail's SMTP servers are
+unreachable from it), so the "Send Offer" broadcast and contact-form notification emails
+need an HTTP-based email API instead. Brevo's API works over plain HTTPS.
+
+1. Go to https://onboarding.brevo.com/account/register and sign up for a free account.
+2. **Senders & IP** (left sidebar) → **Senders** → add and verify the sending address, e.g.
+   `spmobiletechnology@gmail.com` (Brevo emails you a confirmation link — click it).
+3. **SMTP & API** (left sidebar) → **API Keys** → **Generate a new API key** → copy it.
+4. In Render → your `sp-mobile-api` service → **Environment**, add:
+   | Key | Value |
+   |---|---|
+   | `BREVO_API_KEY` | the API key from step 3 |
+   | `EMAIL_FROM_ADDRESS` | the address you verified in step 2, e.g. `spmobiletechnology@gmail.com` |
+   | `EMAIL_FROM_NAME` | `SP Mobile` |
+5. Save — Render redeploys automatically. Email sending now works. Brevo's free tier includes
+   300 emails/day, which is generous for a single shop's contact-form and offer emails.
+
+If `BREVO_API_KEY` is left blank, the app still works — emails are just skipped with a warning
+in the server log instead of being sent.
+
 ## Visit your live site
 
 Open your Vercel URL (e.g. `https://sp-mobile-shop.vercel.app`) — you should see the full site,
 backed by the Render API and Atlas database. Log in with the admin credentials from
 [WORKFLOW.md](WORKFLOW.md) (or whatever `ADMIN_PASSWORD` you set in Render).
-
-## Known limitation: image uploads on the free tier
-
-Render's free web services don't have a persistent disk — any **new** image you upload through
-the admin panel (Accessories/Secondhand Phones) will be lost the next time Render restarts or
-redeploys the service. The seed-generated images (`server/uploads/seed-*.png`) are unaffected
-since they're committed to git and get restored on every deploy.
-
-For production use with real product photos, the fix is to swap the image storage backend to a
-service like Cloudinary (free tier available) instead of local disk — ask if you'd like this
-wired in.
